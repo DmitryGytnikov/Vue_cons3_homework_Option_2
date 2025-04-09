@@ -1,59 +1,84 @@
 <script setup>
-const props = defineProps({
-  tasks: {
-    type: Array,
-    required: true,
-    default: [{}],
+import { ref } from 'vue'
+import { RouterLink } from 'vue-router'
+
+const tasks = ref([
+  {
+    id: 0,
+    description: 'Изучить основы Vue',
+    isCompleted: true,
   },
-})
+])
 
-// console.log(props.tasks)
+const fallbackTodos = [
+  {
+    id: 0,
+    description: 'Изучить основы Vue',
+    isCompleted: true,
+  },
+  {
+    id: 1,
+    description: 'Подготовиться к собеседованию',
+    isCompleted: false,
+  },
+  {
+    id: 2,
+    description: 'Устроиться на работу',
+    isCompleted: false,
+  },
+]
 
-const emit = defineEmits(['createTask', 'setCompletion', 'deleteTask', 'editTask'])
+const getTodos = () => {
+  if (!localStorage.getItem('tasks')) {
+    localStorage.setItem('tasks', JSON.stringify(fallbackTodos))
+  }
 
-const createTask = () => {
-  emit('createTask')
+  tasks.value = JSON.parse(localStorage.getItem('tasks'))
 }
 
-// const idForEmmit = ref(0)
+getTodos()
 
-// const setCompletionDop = (index) => {
-//   idForEmmit = index
-//   setCompletion()
-// }
+const setCompletion = (id) => {
+  tasks.value.find((task) => task.id === id).isCompleted = !tasks.value.find(
+    (task) => task.id === id,
+  ).isCompleted
 
-const setCompletion = () => {
-  emit('setCompletion', props.tasks[idForEmit].id)
+  localStorage.setItem('tasks', JSON.stringify(tasks.value))
 }
 
-const deleteTask = () => {
-  emit('deleteTask', props.tasks.id)
-}
+const deleteTask = (id) => {
+  tasks.value = tasks.value.filter((task) => task.id !== id)
 
-const editTask = () => {
-  emit('editTask', props.tasks.id)
+  localStorage.setItem('tasks', JSON.stringify(tasks.value))
 }
 </script>
 
 <template>
+  <!-- <div>RightTodos</div>
+  <div v-for="task in tasks" :key="task.id" :style="'border: 1px solid black'">
+    <p>id:{{ task.id }}</p>
+    <p>{{ task.description }}</p>
+    <RouterLink :to="{ name: 'edit', params: { id: task.id } }"
+      ><button>Редактировать</button></RouterLink
+    >
+  </div>
+  <RouterLink :to="{ name: 'create' }"><button>Создать задачу</button></RouterLink> -->
+
   <div class="container--home">
     <h2>Список задач</h2>
-    <!-- <div>Значение текущее переменной tasks: {{ tasks }}</div> -->
-    <!-- <a @click="createTask" class="create-link">Создать задачу</a> -->
-    <RouterLink @click="createTask" class="create-link" to="/create">Создать задачу</RouterLink>
+    <RouterLink :to="{ name: 'create' }" class="create-link"> Создать задачу </RouterLink>
     <div
       v-for="(task, index) in tasks"
       :key="task.id"
       class="task"
       :class="{ 'task--completed': task.isCompleted }"
-      @click="setCompletion(index)"
+      @click="setCompletion(task.id)"
     >
-      <p class="task__number">{{ task.id + 1 }} .</p>
+      <p class="task__number">{{ index + 1 }} .</p>
       <p class="task__text">{{ task.description }}</p>
       <div>
         <button @click.stop="deleteTask(task.id)" class="task__delete">Удалить</button>
-        <!-- <button @click.stop="editTask(task.id)" class="task__edit">Редактировать</button> -->
-        <RouterLink @click.stop="editTask(task.id)" class="task__edit" to="/edit">
+        <RouterLink :to="{ name: 'edit', params: { id: task.id } }" class="task__edit">
           Редактировать
         </RouterLink>
       </div>
@@ -91,8 +116,6 @@ const editTask = () => {
 .create-link {
   display: block;
 
-  /* height: 100%; */
-  /* width: 73px; */
   padding: 8px 15px;
   margin-bottom: 8px;
 
@@ -107,10 +130,9 @@ const editTask = () => {
   text-decoration: none;
   border: 2px solid #b3e19d;
   border-radius: 5px;
-  /* background-color: #2199e8; */
 
-  display: block;
   cursor: pointer;
+  text-decoration-line: none;
 
   transition: all 0.3s ease;
 }
@@ -209,6 +231,8 @@ const editTask = () => {
   align-items: center;
 
   cursor: pointer;
+  outline: none;
+  text-decoration-line: none;
 
   transition: all 0.3s ease;
 }

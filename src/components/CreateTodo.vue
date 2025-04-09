@@ -1,22 +1,45 @@
-<script setup></script>
+<script setup>
+import { ref } from 'vue'
+
+import { useRouter } from 'vue-router'
+const router = useRouter()
+
+const tasks = ref([])
+const task = ref('')
+
+const getTodos = () => {
+  tasks.value = JSON.parse(localStorage.getItem('tasks'))
+}
+
+getTodos()
+
+const saveTask = () => {
+  tasks.value.push({
+    id: Math.random() * 100000000000000000,
+    description: task.value,
+    isCompleted: false,
+  })
+
+  localStorage.setItem('tasks', JSON.stringify(tasks.value))
+
+  router.push({ name: 'home' })
+}
+
+const cancelSaveTask = () => {
+  task.value = ''
+  router.push({ name: 'home' })
+}
+</script>
 
 <template>
   <div class="container--create">
     <h2>Создать задачу</h2>
-    <div>Значение текущее newTask: {{ newTask }}</div>
-
-    <form @submit.prevent="addTask" class="create__form">
-      <label for="create-task">Название задачи</label>
-      <input v-model="newTask" type="text" placeholder="" id="create-task" />
-      <div>
-        <!-- <button @click="cancelAddTask" class="create__cancel" type="button">Отменить</button> -->
-        <RouterLink @click="cancelAddTask" class="create__cancel" type="button" to="/">
-          Отменить
-        </RouterLink>
-        <!-- <button class="create__save" type="submit">Сохранить</button> -->
-        <RouterLink class="create__save" type="submit" to="/"> Сохранить </RouterLink>
-      </div>
-    </form>
+    <label class="create__label" for="create-task">Название задачи</label>
+    <input v-model="task" class="create__input" type="text" placeholder="" id="create-task" />
+    <div class="create__container">
+      <button @click="cancelSaveTask" class="create__cancel" type="button">Отменить</button>
+      <button @click="saveTask" class="create__save" type="submit">Сохранить</button>
+    </div>
   </div>
 </template>
 
@@ -47,12 +70,12 @@
   text-align: center;
 }
 
-.create__form label {
+.create__label {
   display: block;
   margin-bottom: 8px;
 }
 
-.create__form input {
+.create__input {
   display: block;
 
   height: 35px;
@@ -64,7 +87,6 @@
 
   font-style: normal;
   font-weight: 400;
-  /* font-size: 1rem; */
   color: black;
 
   border: 1px solid #9ca3af;
@@ -75,22 +97,22 @@
   transition: all 0.4s ease;
 }
 
-.create__form input::placeholder {
+.create__input::placeholder {
   font-style: normal;
   font-weight: 400;
   color: black;
 }
 
-.create__form input:hover {
+.create__input:hover {
   border-color: #c0c4cc;
 }
 
-.create__form input:focus,
-.create__form input:active {
+.create__input:focus,
+.create__input:active {
   border-color: #a0cfff;
 }
 
-.create__form div {
+.create__container {
   display: flex;
 }
 

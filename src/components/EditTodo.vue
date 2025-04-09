@@ -1,26 +1,64 @@
-<script setup></script>
+<script setup>
+import { ref } from 'vue'
+
+import { useRoute, useRouter } from 'vue-router'
+const router = useRouter()
+const route = useRoute()
+
+const tasks = ref([])
+const task = ref({
+  id: 0,
+  description: '',
+  isCompleted: false,
+})
+
+const getTodos = () => {
+  tasks.value = JSON.parse(localStorage.getItem('tasks'))
+}
+
+const getTask = () => {
+  task.value = tasks.value.find((task) => task.id === +route.params.id)
+}
+
+getTodos()
+getTask()
+
+const saveTask = () => {
+  tasks.value = tasks.value.map((currentTask) => {
+    if (currentTask.id === +route.params.id) {
+      currentTask.description = task.value.description
+    }
+    return currentTask
+  })
+
+  localStorage.setItem('tasks', JSON.stringify(tasks.value))
+
+  router.push({ name: 'home' })
+}
+</script>
 
 <template>
-  <div class="container--edit">
+  <div>params id:{{ route.params.id }}</div>
+  <div>Create Todo</div>
+  <label
+    >Название задачи
+    <input v-model="task.description" type="text" />
+  </label>
+  <button @click="saveTask">Сохранить</button>
+</template>
+
+<!-- <div class="container--edit">
     <h2>Редактировать задачу</h2>
-    <div>Значение текущее editedTask: {{ editedTask }}</div>
-    <div>Значение текущее idForEditedTask: {{ idForEditedTask }}</div>
-    <div>Значение текущее isTransitionFromHome: {{ isTransitionFromHome }}</div>
 
     <form @submit.prevent="saveEditedTask" class="edit__form">
       <label for="edit-task">Название задачи</label>
       <input v-model="editedTask" type="text" placeholder="" id="edit-task" />
       <div>
-        <!-- <button @click="cancelEditTask" class="edit__cancel" type="button">Отменить</button> -->
-        <RouterLink @click="cancelEditTask" class="edit__cancel" type="button" to="/">
-          Отменить
-        </RouterLink>
-        <!-- <button class="edit__save" type="submit">Сохранить изменения</button> -->
-        <RouterLink class="edit__save" type="submit" to="/"> Сохранить изменения </RouterLink>
+        <button @click="cancelEditTask" class="edit__cancel" type="button">Отменить</button>
+        <button class="edit__save" type="submit">Сохранить изменения</button>
       </div>
     </form>
-  </div>
-</template>
+  </div> -->
 
 <style scoped>
 *,

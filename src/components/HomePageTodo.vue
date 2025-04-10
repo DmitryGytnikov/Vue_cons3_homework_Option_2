@@ -54,16 +54,6 @@ const deleteTask = (id) => {
 </script>
 
 <template>
-  <!-- <div>RightTodos</div>
-  <div v-for="task in tasks" :key="task.id" :style="'border: 1px solid black'">
-    <p>id:{{ task.id }}</p>
-    <p>{{ task.description }}</p>
-    <RouterLink :to="{ name: 'edit', params: { id: task.id } }"
-      ><button>Редактировать</button></RouterLink
-    >
-  </div>
-  <RouterLink :to="{ name: 'create' }"><button>Создать задачу</button></RouterLink> -->
-
   <div class="container--home">
     <h2>Список задач</h2>
     <RouterLink :to="{ name: 'create' }" class="create-link"> Создать задачу </RouterLink>

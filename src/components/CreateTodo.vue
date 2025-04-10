@@ -38,7 +38,7 @@ const cancelSaveTask = () => {
     <input v-model="task" class="create__input" type="text" placeholder="" id="create-task" />
     <div class="create__container">
       <button @click="cancelSaveTask" class="create__cancel" type="button">Отменить</button>
-      <button @click="saveTask" class="create__save" type="submit">Сохранить</button>
+      <button @click="saveTask" class="create__save" type="button">Сохранить</button>
     </div>
   </div>
 </template>

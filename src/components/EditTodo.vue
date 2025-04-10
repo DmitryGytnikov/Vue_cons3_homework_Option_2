@@ -35,30 +35,29 @@ const saveTask = () => {
 
   router.push({ name: 'home' })
 }
+
+const cancelEditTask = () => {
+  router.push({ name: 'home' })
+}
 </script>
 
 <template>
-  <div>params id:{{ route.params.id }}</div>
-  <div>Create Todo</div>
-  <label
-    >Название задачи
-    <input v-model="task.description" type="text" />
-  </label>
-  <button @click="saveTask">Сохранить</button>
-</template>
-
-<!-- <div class="container--edit">
+  <div class="container--edit">
     <h2>Редактировать задачу</h2>
-
-    <form @submit.prevent="saveEditedTask" class="edit__form">
-      <label for="edit-task">Название задачи</label>
-      <input v-model="editedTask" type="text" placeholder="" id="edit-task" />
-      <div>
-        <button @click="cancelEditTask" class="edit__cancel" type="button">Отменить</button>
-        <button class="edit__save" type="submit">Сохранить изменения</button>
-      </div>
-    </form>
-  </div> -->
+    <label class="edit__label" for="edit-task">Название задачи</label>
+    <input
+      v-model="task.description"
+      class="edit__input"
+      type="text"
+      placeholder=""
+      id="edit-task"
+    />
+    <div class="edit__container">
+      <button @click="cancelEditTask" class="edit__cancel" type="button">Отменить</button>
+      <button @click="saveTask" class="edit__save" type="button">Сохранить изменения</button>
+    </div>
+  </div>
+</template>
 
 <style scoped>
 *,
@@ -87,12 +86,12 @@ const saveTask = () => {
   text-align: center;
 }
 
-.edit__form label {
+.edit__label {
   display: block;
   margin-bottom: 8px;
 }
 
-.edit__form input {
+.edit__input {
   display: block;
 
   height: 35px;
@@ -114,22 +113,22 @@ const saveTask = () => {
   transition: all 0.4s ease;
 }
 
-.edit__form input::placeholder {
+.edit__input::placeholder {
   font-style: normal;
   font-weight: 400;
   color: black;
 }
 
-.edit__form input:hover {
+.edit__input:hover {
   border-color: #c0c4cc;
 }
 
-.edit__form input:focus,
-.edit__form input:active {
+.edit__input:focus,
+.edit__input:active {
   border-color: #a0cfff;
 }
 
-.edit__form div {
+.edit__container {
   display: flex;
 }
 
